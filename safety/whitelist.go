@@ -7,8 +7,22 @@ var AllowedCommands = map[string]bool{
 	"mkdir": true,
 	"grep":  true,
 	"pwd":   true,
-	"go":    true,
-	"dir":   true, // Windows
+	"touch": true,
+	"rm":    true,
+	"cp":    true,
+	"mv":    true,
+	"find":  true,
+	"wc":    true,
+	"head":  true,
+	"tail":  true,
+
+	// Windows commands
+	"dir":           true,
+	"Get-ChildItem": true,
+	"Get-Content":   true,
+
+	// Cross-platform
+	"go": true,
 }
 
 func IsAllowedRequest(cmd string) bool {

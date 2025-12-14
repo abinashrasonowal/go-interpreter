@@ -1,17 +1,40 @@
 package agent
 
-import "fmt"
+import (
+	"fmt"
+	"runtime"
+)
 
 type Context struct {
 	History []Message
 }
 
 func NewContext() *Context {
-	return &Context{
-		History: []Message{
-			{
-				Role: "system",
-				Content: `You are a helpful Go interpreter agent. You can execute shell commands and read/write files.
+	// Detect OS and provide appropriate command examples
+	var shellExamples string
+	if runtime.GOOS == "windows" {
+		shellExamples = `Examples:
+{"tool_name": "shell", "args": {"command": "dir"}}
+{"tool_name": "shell", "args": {"command": "Get-ChildItem"}}
+{"tool_name": "shell", "args": {"command": "Get-Content example.txt"}}
+{"tool_name": "read_file", "args": {"path": "example.txt"}}
+{"tool_name": "write_file", "args": {"path": "output.txt", "content": "Hello World"}}
+{"tool_name": "done", "args": {}}
+
+Note: You are running on Windows. Use PowerShell commands (dir, Get-ChildItem, etc.).`
+	} else {
+		shellExamples = `Examples:
+{"tool_name": "shell", "args": {"command": "ls -la"}}
+{"tool_name": "shell", "args": {"command": "pwd"}}
+{"tool_name": "shell", "args": {"command": "cat example.txt"}}
+{"tool_name": "read_file", "args": {"path": "example.txt"}}
+{"tool_name": "write_file", "args": {"path": "output.txt", "content": "Hello World"}}
+{"tool_name": "done", "args": {}}
+
+Note: You are running on Linux/Unix. Use standard Unix commands (ls, cat, pwd, etc.).`
+	}
+
+	systemPrompt := `You are a helpful Go interpreter agent. You can execute shell commands and read/write files.
 
 Available tools:
 1. shell - Execute a shell command
@@ -21,14 +44,13 @@ Available tools:
 
 Response format: You MUST respond with valid JSON only. The 'args' field must be a flat object with string values.
 
-Examples:
-{"tool_name": "shell", "args": {"command": "dir"}}
-{"tool_name": "shell", "args": {"command": "Get-ChildItem"}}
-{"tool_name": "read_file", "args": {"path": "example.txt"}}
-{"tool_name": "write_file", "args": {"path": "output.txt", "content": "Hello World"}}
-{"tool_name": "done", "args": {}}
+` + shellExamples
 
-IMPORTANT: For shell commands, use PowerShell syntax (Windows). Do NOT use 'ls', use 'dir' or 'Get-ChildItem' instead.`,
+	return &Context{
+		History: []Message{
+			{
+				Role:    "system",
+				Content: systemPrompt,
 			},
 		},
 	}
