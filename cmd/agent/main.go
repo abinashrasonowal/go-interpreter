@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
+	"strings"
 	"go-interpreter/actions"
 	"go-interpreter/agent"
 	"go-interpreter/config"
@@ -26,13 +28,36 @@ func main() {
 	
 	ag := agent.NewAgent(planner, actions.Execute)
 
-	if len(os.Args) < 2 {
-		fmt.Println("Usage: agent <goal>")
-		fmt.Println("Example: agent 'list files in current directory'")
+	// Parse command line args if provided
+	if len(os.Args) > 1 {
+		goal := os.Args[1]
+		fmt.Printf("Starting agent with goal: %s\n", goal)
+		ag.Run(goal)
 		return
 	}
 
-	goal := os.Args[1]
-	fmt.Printf("Starting agent with goal: %s\n", goal)
-	ag.Run(goal)
+	// Interactive mode
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("Go Interpreter Agent (Type 'exit' or Ctrl+C to quit)")
+	fmt.Println("---------------------------------------------------")
+
+	for {
+		fmt.Print("\n>> ")
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Error reading input:", err)
+			break
+		}
+
+		input = strings.TrimSpace(input)
+		if input == "exit" || input == "quit" {
+			break
+		}
+
+		if input == "" {
+			continue
+		}
+
+		ag.Run(input)
+	}
 }

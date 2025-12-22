@@ -24,9 +24,29 @@ func (p *Planner) Plan(ctx *Context) (*Action, error) {
 		return nil, err
 	}
 	
+	// Try to extract JSON from code blocks or raw text
 	jsonStr := resp
-	if match := regexp.MustCompile("```json\n([\\s\\S]*?)\n```").FindStringSubmatch(resp); len(match) > 1 {
+	if match := regexp.MustCompile("```(?:json)?\n?([\\s\\S]*?)\n?```").FindStringSubmatch(resp); len(match) > 1 {
 		jsonStr = match[1]
+	} else {
+		// Fallback: finding the first '{' and last '}'
+		start := -1
+		end := -1
+		for i, r := range resp {
+			if r == '{' {
+				start = i
+				break
+			}
+		}
+		for i := len(resp) - 1; i >= 0; i-- {
+			if resp[i] == '}' {
+				end = i + 1
+				break
+			}
+		}
+		if start != -1 && end != -1 && start < end {
+			jsonStr = resp[start:end]
+		}
 	}
 
 	var action Action

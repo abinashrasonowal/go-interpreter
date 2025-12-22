@@ -5,6 +5,8 @@ A cross-platform AI-powered agent that can execute shell commands and manage fil
 ## Features
 
 - 🤖 Natural language goal interpretation
+- 💬 Interactive chat mode (REPL)
+- 🌐 Web browsing capability (read_url)
 - 🖥️ Cross-platform support (Windows, Linux, macOS)
 - 🔒 Built-in safety sandbox with command whitelisting
 - ⏱️ Command timeout protection
@@ -19,7 +21,7 @@ A cross-platform AI-powered agent that can execute shell commands and manage fil
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/abinashrasonowal/go-interpreter.git
 cd go-interpreter
 ```
 
@@ -30,12 +32,12 @@ go mod download
 
 3. Configure environment variables:
 ```bash
-# Copy the example .env file
-cp .env.example .env
+cp .env
 
 # Edit .env and set your Ollama configuration
 # OLLAMA_HOST=http://localhost:11434
 # OLLAMA_API_KEY=
+# OLLAMA_MODEL=gpt-oss:120b
 ```
 
 ## Building
@@ -50,33 +52,51 @@ go build -o agent.exe ./cmd/agent
 go build -o agent ./cmd/agent
 ```
 
-## Usage
-
-### Windows
-```powershell
-.\agent.exe "your goal here"
-```
-
-### Linux/macOS
 ```bash
-./agent "your goal here"
+# Start interactive mode
+./agent
+
+# Start with a single goal
+./agent "list files in current directory"
 ```
 
 ### Examples
 
 ```bash
-# List files in current directory
-./agent "list files in current directory"
+# List files
+>> list files in current directory
 
-# Create a file with content
-./agent "create a file called test.txt with content 'Hello World'"
+# Create a file
+>> create a file called test.txt with content 'Hello World'
 
-# Read a file
-./agent "read the README.md file"
+# Read a website
+>> read https://example.com and summarize it
 
-# Find all Go files
-./agent "show me all .go files"
+# Run tests
+>> run all tests
 ```
+
+## Use Cases
+
+### 1. Development & Quality Assurance
+- **Run Tests**: `"run all tests"` (executes `go test ./...`)
+- **Code Formatting**: `"format all files"` (executes `go fmt ./...`)
+- **Dependency Management**: `"tidy up modules"` or `"initialize a new module"`
+- **Build**: `"build the agent"`
+
+### 2. Codebase Exploration
+- **Summarize Code**: `"read agent/agent.go and explain how it works"`
+- **Search Code**: `"find all places where ValidateCommand is used"`
+- **Count Stats**: `"count lines of code in the actions directory"`
+
+### 3. File Management
+- **Refactoring**: `"move all markdown files to a docs folder"`
+- **Cleanup**: `"remove the temp directory"`
+- **Scaffolding**: `"create a new directory structure for a web server"`
+
+### 4. Web Research
+- **Fetch Info**: `"read https://pkg.go.dev/net/http and explain the Get function"`
+
 
 ## Architecture
 
@@ -122,6 +142,7 @@ Environment variables (set in `.env` file):
 
 - `OLLAMA_HOST` - Ollama API endpoint (default: http://localhost:11434)
 - `OLLAMA_API_KEY` - API key for Ollama (if required)
+- `OLLAMA_MODEL` - Model to use (default: gpt-oss:120b)
 - `LLM_BACKEND` - LLM backend to use (default: ollama)
 
 ## License

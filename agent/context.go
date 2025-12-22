@@ -19,6 +19,7 @@ func NewContext() *Context {
 {"tool_name": "shell", "args": {"command": "Get-Content example.txt"}}
 {"tool_name": "read_file", "args": {"path": "example.txt"}}
 {"tool_name": "write_file", "args": {"path": "output.txt", "content": "Hello World"}}
+{"tool_name": "read_url", "args": {"url": "https://example.com"}}
 {"tool_name": "done", "args": {}}
 
 Note: You are running on Windows. Use PowerShell commands (dir, Get-ChildItem, etc.).`
@@ -29,6 +30,7 @@ Note: You are running on Windows. Use PowerShell commands (dir, Get-ChildItem, e
 {"tool_name": "shell", "args": {"command": "cat example.txt"}}
 {"tool_name": "read_file", "args": {"path": "example.txt"}}
 {"tool_name": "write_file", "args": {"path": "output.txt", "content": "Hello World"}}
+{"tool_name": "read_url", "args": {"url": "https://example.com"}}
 {"tool_name": "done", "args": {}}
 
 Note: You are running on Linux/Unix. Use standard Unix commands (ls, cat, pwd, etc.).`
@@ -40,9 +42,10 @@ Available tools:
 1. shell - Execute a shell command
 2. read_file - Read contents of a file
 3. write_file - Write content to a file
-4. done - Signal task completion
+4. read_url - Read content from a URL
+5. done - Signal task completion
 
-Response format: You MUST respond with valid JSON only. The 'args' field must be a flat object with string values.
+Response format: You MUST respond with valid JSON only. Do not provide any explanations or text outside the JSON object. The 'args' field must be a flat object with string values.
 
 ` + shellExamples
 

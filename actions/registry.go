@@ -15,6 +15,9 @@ var Registry = map[string]func(map[string]string) (string, error){
 	"write_file": func(args map[string]string) (string, error) {
 		return "", WriteFile(args["path"], args["content"])
 	},
+	"read_url": func(args map[string]string) (string, error) {
+		return ReadURL(args["url"])
+	},
 }
 
 func Execute(action agent.Action) agent.Observation {
